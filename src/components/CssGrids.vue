@@ -240,7 +240,7 @@ export default {
     inverseColor(color) {
       // code taken from http://www.mattlag.com/scripting/hexcolorinverter.php
       var hexnum = color.substring(1)
-      var hexnum = hexnum.toUpperCase();
+      hexnum = hexnum.toUpperCase();
       var splitnum = hexnum.split("");
       var resultnum = "";
       var simplenum = "FEDCBA9876".split("");
