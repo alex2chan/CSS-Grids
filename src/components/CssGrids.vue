@@ -89,22 +89,22 @@
         <b-form-group
         label-for="gridColumn"
         label="Grid Column:">
-          <b-form-input id="gridColumn" type="text" v-model="itemObject.gridColumn" @input="putChange(itemObject.name, 'gridColumn')"></b-form-input>
+          <b-form-input id="gridColumn" type="text" v-model="itemObject.gridColumn"></b-form-input>
         </b-form-group>
         <b-form-group
         label-for="gridRow"
         label="Grid Row:">
-          <b-form-input id="gridRow" type="text" v-model="itemObject.gridRow" @input="putChange(itemObject.name, 'gridRow')"></b-form-input>
+          <b-form-input id="gridRow" type="text" v-model="itemObject.gridRow"></b-form-input>
         </b-form-group>
         <b-form-group
         label-for="alignSelf"
         label="Align Self:">
-          <b-form-select id="alignSelf" type="text" v-model="itemObject.alignSelf" :options="options" @input="putChange(itemObject.name, 'alignSelf')"></b-form-select>
+          <b-form-select id="alignSelf" type="text" v-model="itemObject.alignSelf" :options="options"></b-form-select>
         </b-form-group>
         <b-form-group
         label-for="justifySelf"
         label="Justify Self:">
-          <b-form-select id="justifySelf" type="text" v-model="itemObject.justifySelf" :options="options" @input="putChange(itemObject.name, 'justifySelf')"></b-form-select>
+          <b-form-select id="justifySelf" type="text" v-model="itemObject.justifySelf" :options="options"></b-form-select>
         </b-form-group>
         <code class="item-code text-left mt-5">
           <pre class="text-light">
@@ -145,7 +145,7 @@
       </b-row>
     </div>
     <div class="grid mb-5" :style="cssProps">
-      <b-form-checkbox :class="{[item.name]: true}" v-for="item in items" v-model="itemObject" :value="item" button>
+      <b-form-checkbox :class="{[item.name]: true}" v-for="item in items" v-model="itemObject" :value="item" button :key="item.id" :style="item">
         {{ item.name }}
         <b-button
         variant="danger"
@@ -172,9 +172,9 @@ export default {
       gridAutoColumns: '150px',
       gridColumnGap: '1em',
       gridRowGap: '1em',
-      gridAutoFlow: 'row',
+      gridAutoFlow: 'null',
       gridAutoFlowOptions: [
-        { value: 'auto', text: 'auto' },
+        { value: 'null', text: 'null' },
         { value: 'row', text: 'row' },
         { value: 'column', text: 'column' },
         { value: 'row-dense', text: 'row-dense' },
@@ -198,6 +198,7 @@ export default {
         { value: 'space-evenly', text: 'space-evenly' }
       ],
       items: [],
+      itemsRemoved: [],
       itemObject: {
         name: null,
         gridColumn: null,
@@ -209,31 +210,37 @@ export default {
   },
   methods: {
     addItem() {
-      var l = this.items.length
-      this.items.push({
-        name: 'item' + l,
+      var item = {
         gridColumn: null,
         gridRow: null,
         alignSelf: null,
         justifySelf: null
-      })
+      }
+      if (this.itemsRemoved.length > 0) {
+        item.name = this.itemsRemoved[this.itemsRemoved.length-1]
+        this.items.push(item)
+        this.itemsRemoved.pop()
+      } else {
+        var l = this.items.length
+        item.name = 'item' + l
+        this.items.push(item)
+      }
     },
     removeItem(item) {
       var idx = this.items.indexOf(item)
       this.items.splice(idx, 1)
-      if (this.itemObject) {
-        this.itemObject.name = null
-      }
+      this.itemsRemoved.push(item.name)
+      this.itemsRemoved.sort(function(a, b) {
+        var aI = parseInt(a.substring(4))
+        var bI = parseInt(b.substring(4))
+        return bI - aI
+      })
     },
     clearItems() {
       this.items = []
       if (this.itemObject) {
         this.itemObject.name = null
       }
-    },
-    putChange(itemName, key) {
-      var el = document.querySelector("div.grid div." + itemName)
-      el.style[key] = this.itemObject[key]
     },
     inverseColor(color) {
       // code taken from http://www.mattlag.com/scripting/hexcolorinverter.php
@@ -264,54 +271,35 @@ export default {
       return "#" + resultnum;
     },
     preSet() {
+      this.items = []
       this.items.push({
         name: 'item0',
-        gridColumn: null,
-        gridRow: null,
+        gridColumn: '1/span 2',
+        gridRow: '1/2',
         alignSelf: null,
         justifySelf: null
       })
-      setTimeout(() => {
-        var el = document.querySelector("div.grid div.item0")
-        el.style['gridColumn'] = '1/span 3'
-        el.style['gridRow'] = '1/2'
-      }, 1)
       this.items.push({
         name: 'item1',
-        gridColumn: null,
-        gridRow: null,
+        gridColumn: '3/4',
+        gridRow: '1/span 2',
         alignSelf: null,
         justifySelf: null
       })
-      setTimeout(() => {
-        var el = document.querySelector("div.grid div.item1")
-        el.style['gridColumn'] = '3/4'
-        el.style['gridRow'] = '1/span 3'
-      }, 1)
       this.items.push({
         name: 'item2',
-        gridColumn: null,
-        gridRow: null,
+        gridColumn: '-3/span 2',
+        gridRow: '3/4',
         alignSelf: null,
         justifySelf: null
       })
-      setTimeout(() => {
-        var el = document.querySelector("div.grid div.item2")
-        el.style['gridColumn'] = '-4/span 3'
-        el.style['gridRow'] = '3/4'
-      }, 1)
       this.items.push({
         name: 'item3',
-        gridColumn: null,
-        gridRow: null,
+        gridColumn: '1/2',
+        gridRow: '2/span 2',
         alignSelf: null,
         justifySelf: null
       })
-      setTimeout(() => {
-        var el = document.querySelector("div.grid div.item3")
-        el.style['gridColumn'] = '1/2'
-        el.style['gridRow'] = '1/span 3'
-      }, 1)
     }
   },
   computed: {
