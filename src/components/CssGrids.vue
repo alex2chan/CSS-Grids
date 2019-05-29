@@ -119,30 +119,22 @@
       </div>
       <hr>
     </div>
-    <div class="mb-5">
-      <b-row align-h="around">
-        <b-col class="text-right">
-          <b-button
-          variant="success"
-          @click="addItem()">
-          Add Item
-          </b-button>
-        </b-col>
-        <b-col class="text-center">
-          <b-button
-          variant="warning"
-          @click="preSet()">
-          Preset
-          </b-button>
-        </b-col class="text-left">
-        <b-col>
-          <b-button
-          variant="danger"
-          @click="clearItems()">
-          Clear All Items
-          </b-button>
-        </b-col>
-      </b-row>
+    <div class="button-container mb-5">
+      <b-button
+      variant="success"
+      @click="addItem()">
+      Add Item
+      </b-button>
+      <b-button
+      variant="warning"
+      @click="preSet()">
+      Preset
+      </b-button>
+      <b-button
+      variant="danger"
+      @click="clearItems()">
+      Clear All Items
+      </b-button>
     </div>
     <div class="grid mb-5" :style="cssProps">
       <b-form-checkbox :class="{[item.name]: true}" v-for="item in items" v-model="itemObject" :value="item" button :key="item.id" :style="item">
@@ -235,6 +227,9 @@ export default {
         var bI = parseInt(b.substring(4))
         return bI - aI
       })
+      if (this.itemObject) {
+        this.itemObject.name = null
+      }
     },
     clearItems() {
       this.items = []
@@ -272,6 +267,9 @@ export default {
     },
     preSet() {
       this.items = []
+      if (this.itemObject) {
+        this.itemObject.name = null
+      }
       this.items.push({
         name: 'item0',
         gridColumn: '1/span 2',
@@ -321,11 +319,9 @@ export default {
       }
     },
     gridGap: {
-      // getter
       get: function () {
         return this.gridRowGap + ' ' + this.gridColumnGap
       },
-      // setter
       set: function (newValue) {
         var regex = /\d(em|fr|px|rem)/g
         var found = newValue.match(regex)
@@ -373,26 +369,20 @@ div >>> label.btn.btn-secondary.active {
 .header-container {
   display: grid;
   justify-content: center;
-  grid-auto-rows: minmax(1em, auto);
-  grid-auto-flow: row;
+  grid-template-columns: repeat(4, 11em);
   grid-column-gap: 1em;
 }
-@media (min-width: 40em) {
-  .header-container {
-    grid-template-columns: repeat(4, 11em);
-    grid-column-gap: 1em;
-  }
-  .container {
-    display: grid;
-    justify-content: center;
-    grid-template-columns: repeat(3, 18em);
-    grid-template-rows: auto;
-    grid-column-gap: 1em;
-  }
+.button-container {
+  display: grid;
+  justify-content: center;
+  place-items: center;
+  grid-template-columns: repeat(3, 10em);
+  grid-column-gap: 15em;
 }
 .container {
   display: grid;
   justify-content: center;
+  grid-template-columns: repeat(3, 18em);
   grid-auto-flow: row;
   grid-column-gap: 1em;
 }
@@ -406,9 +396,9 @@ div >>> label.btn.btn-secondary.active {
 }
 hr {
   background-color: purple;
-  width: 75em;
+  width: 60em;
 }
 input, div >>> select {
-  text-align: center;
+  text-align-last: center;
 }
 </style>
