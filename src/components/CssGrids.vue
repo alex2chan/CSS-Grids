@@ -7,19 +7,24 @@
         <b-form-input id="itemBgColor" type="color" v-model="itemBgColor"></b-form-input>
       </b-form-group>
       <b-form-group
-      label-for="align"
+      label-for="alignItems"
       label="Align Items:">
-        <b-form-select id="align" v-model="alignItems" :options="options"></b-form-select>
+        <b-form-select id="alignItems" v-model="alignItems" :options="options"></b-form-select>
       </b-form-group>
       <b-form-group
-      label-for="align"
+      label-for="justifyItems"
       label="Justify Items:">
-        <b-form-select id="align" v-model="justifyItems" :options="options"></b-form-select>
+        <b-form-select id="justifyItems" v-model="justifyItems" :options="options"></b-form-select>
       </b-form-group>
       <b-form-group
-      label-for="align"
+      label-for="alignContent"
+      label="Align Content:">
+        <b-form-select id="alignContent" v-model="alignContent" :options="contentOptions"></b-form-select>
+      </b-form-group>
+      <b-form-group
+      label-for="justifyContent"
       label="Justify Content:">
-        <b-form-select id="align" v-model="justifyContent" :options="justifyContentOptions"></b-form-select>
+        <b-form-select id="justifyContent" v-model="justifyContent" :options="contentOptions"></b-form-select>
       </b-form-group>
     </div>
     <div class="container mb-5 text-center">
@@ -63,21 +68,12 @@
       label="Grid Row Gap:">
         <b-form-input id="gridRowGap" type="text" v-model="gridRowGap"></b-form-input>
       </b-form-group>
-      <code class="code text-left mt-5">
+      <code class="code text-left">
         <pre class="text-light">
+          {{ getGridCode() }}
           .grid {
-            display: grid;
-            justify-content: {{justifyContent}};
-            grid-template-columns: {{gridTemplateColumns}};
-            grid-template-rows: {{gridTemplateRows}};
-            grid-auto-columns: {{gridAutoColumns}};
-            grid-auto-rows: {{gridAutoRows}};
-            grid-column-gap: {{gridColumnGap}};
-            grid-row-gap: {{gridRowGap}};
-            grid-gap: {{gridGap}};
-            align-items: {{alignItems}};
-            justify-items: {{justifyItems}};
-            grid-auto-flow: {{gridAutoFlow}};
+
+            {{ beautify(gridStyleCode) }}
           }
         </pre>
       </code>
@@ -106,16 +102,23 @@
         label="Justify Self:">
           <b-form-select id="justifySelf" type="text" v-model="itemObject.justifySelf" :options="options"></b-form-select>
         </b-form-group>
-        <code class="item-code text-left mt-5">
+        <code class="item-code text-left">
           <pre class="text-light">
+            {{ getItemCode(itemObject.name) }}
             .{{itemObject.name}} {
-              gridColumn: {{itemObject.gridColumn}},
-              gridRow: {{itemObject.gridRow}},
-              alignSelf: {{itemObject.alignSelf}},
-              justifySelf: {{itemObject.justifySelf}},
+
+              {{ beautify(itemStyleCode) }}
             }
           </pre>
         </code>
+      </div>
+      <div class="text-center">
+        <b-button
+        variant="danger"
+        size="sm"
+        @click="removeItem(itemObject.name)">
+        Delete Item
+        </b-button>
       </div>
       <hr>
     </div>
@@ -136,15 +139,9 @@
       Clear All Items
       </b-button>
     </div>
-    <div class="grid mb-5" :style="cssProps">
-      <b-form-checkbox :class="{[item.name]: true}" v-for="item in items" v-model="itemObject" :value="item" button :key="item.id" :style="item">
-        {{ item.name }}
-        <b-button
-        variant="danger"
-        size="sm"
-        @click="removeItem(item)">
-        X
-        </b-button>
+    <div class="grid mb-5" :style="gridStyle" id="grid">
+      <b-form-checkbox size="sm" :class="{[item.name]: true}" v-for="item in items" v-model="itemObject" :value="item" button :key="item.id" :style="item">
+        {{ item.name.substring(4) }}
       </b-form-checkbox>
     </div>
   </div>
@@ -154,19 +151,20 @@
 export default {
   data() {
     return {
-      itemBgColor: '#cb99e2',
       alignItems: 'stretch',
       justifyItems: 'stretch',
+      alignContent: 'center',
       justifyContent: 'center',
-      gridTemplateColumns: 'repeat(3, 150px)',
-      gridTemplateRows: 'repeat(3, 100px)',
-      gridAutoRows: '150px',
-      gridAutoColumns: '150px',
       gridColumnGap: '1em',
       gridRowGap: '1em',
-      gridAutoFlow: 'null',
+      gridAutoFlow: 'auto',
+      gridTemplateColumns: 'repeat(auto-fit, minmax(100px, 200px))',
+      gridTemplateRows: 'repeat(auto-fit, minmax(100px, 200px))',
+      gridAutoRows: '100px',
+      gridAutoColumns: '100px',
+      itemBgColor: '#cb99e2',
       gridAutoFlowOptions: [
-        { value: 'null', text: 'null' },
+        { value: 'auto', text: 'auto' },
         { value: 'row', text: 'row' },
         { value: 'column', text: 'column' },
         { value: 'row-dense', text: 'row-dense' },
@@ -179,7 +177,7 @@ export default {
         { value: 'center', text: 'center' },
         { value: 'stretch', text: 'stretch' }
       ],
-      justifyContentOptions: [
+      contentOptions: [
         { value: 'auto', text: 'auto' },
         { value: 'start', text: 'start' },
         { value: 'end', text: 'end' },
@@ -197,7 +195,9 @@ export default {
         gridRow: null,
         alignSelf: null,
         justifySelf: null
-      }
+      },
+      gridStyleCode: '',
+      itemStyleCode: ''
     }
   },
   methods: {
@@ -218,10 +218,11 @@ export default {
         this.items.push(item)
       }
     },
-    removeItem(item) {
+    removeItem(itemName) {
+      var item = this.items.find(x => x.name == itemName)
       var idx = this.items.indexOf(item)
       this.items.splice(idx, 1)
-      this.itemsRemoved.push(item.name)
+      this.itemsRemoved.push(itemName)
       this.itemsRemoved.sort(function(a, b) {
         var aI = parseInt(a.substring(4))
         var bI = parseInt(b.substring(4))
@@ -286,7 +287,7 @@ export default {
       })
       this.items.push({
         name: 'item2',
-        gridColumn: '-3/span 2',
+        gridColumn: '2/span 2',
         gridRow: '3/4',
         alignSelf: null,
         justifySelf: null
@@ -298,24 +299,46 @@ export default {
         alignSelf: null,
         justifySelf: null
       })
+    },
+    getGridCode() {
+      setTimeout(() => {
+        var el = document.querySelector('div.grid')
+        var colorTerm = /\s--i.+?(color:#).{6};/g
+        var code = el.style.cssText.replace(colorTerm, '')
+        var dashedTerm = /--/g
+        code = code.replace(dashedTerm, '')
+        var addSpaceTerm = /(ns:|ws:)/g
+        code = code.replace(addSpaceTerm, '$1 ')
+        this.gridStyleCode = code
+      }, 1)
+    },
+    getItemCode(itemName) {
+      setTimeout(() => {
+        var el = document.querySelector('div.grid div.' + itemName)
+        this.itemStyleCode = el.style.cssText
+      }, 1)
+    },
+    beautify(code) {
+      var searchTerm = /;/g
+      return code.replace(searchTerm, ';\n')
     }
   },
   computed: {
-    cssProps() {
+    gridStyle() {
       return {
+        alignItems: this.alignItems,
+        justifyItems: this.justifyItems,
+        alignContent: this.alignContent,
+        justifyContent: this.justifyContent,
+        gridColumnGap: this.gridColumnGap,
+        gridRowGap: this.gridRowGap,
+        gridAutoFlow: this.gridAutoFlow,
         '--item-bg-color': this.itemBgColor,
         '--inverse-color': this.inverseColor(this.itemBgColor),
-        '--align-items': this.alignItems,
-        '--justify-items': this.justifyItems,
-        '--justify-content': this.justifyContent,
         '--grid-template-columns': this.gridTemplateColumns,
         '--grid-template-rows': this.gridTemplateRows,
         '--grid-auto-columns': this.gridAutoColumns,
-        '--grid-auto-rows': this.gridAutoRows,
-        '--grid-column-gap': this.gridColumnGap,
-        '--grid-row-gap': this.gridRowGap,
-        '--grid-gap': this.gridRowGap + ' ' + this.gridColumnGap,
-        '--grid-auto-flow': this.gridAutoFlow,
+        '--grid-auto-rows': this.gridAutoRows
       }
     },
     gridGap: {
@@ -336,69 +359,59 @@ export default {
 </script>
 
 <style lang="css" scoped>
+pre, code{
+  white-space: pre-line;
+}
+hr {
+  background-color: purple;
+}
+input, div >>> select {
+  text-align-last: center;
+}
 div >>> label.btn.btn-secondary {
   background-color: var(--item-bg-color);
-  border: 1px solid;
+  border: none;
 }
 div >>> label.btn.btn-secondary.active {
   background-color: var(--inverse-color);
-  border: 1px solid;
+  border: none;
 }
 .grid {
   display: grid;
-  justify-content: var(--justify-content);
   grid-template-columns: var(--grid-template-columns);
   grid-template-rows: var(--grid-template-rows);
   grid-auto-columns: var(--grid-auto-columns);
   grid-auto-rows: var(--grid-auto-rows);
-  grid-column-gap: var(--grid-column-gap);
-  grid-row-gap: var(--grid-row-gap);
-  grid-gap: var(--grid-gap);
-  align-items: var(--align-items);
-  justify-items: var(--justify-items);
-  grid-auto-flow: var(--grid-auto-flow);
 }
 .grid > div {
   border: 1px solid #c342d2;
   background: var(--item-bg-color);
   opacity: 0.75;
 }
-.input-width {
-  width: 200px;
-}
 .header-container {
   display: grid;
-  justify-content: center;
-  grid-template-columns: repeat(4, 11em);
+  place-content: center;
+  grid-template-columns: repeat(auto-fit, 11em);
   grid-column-gap: 1em;
 }
 .button-container {
   display: grid;
   justify-content: center;
   place-items: center;
-  grid-template-columns: repeat(3, 10em);
-  grid-column-gap: 15em;
+  grid-template-columns: repeat(auto-fit, 10em);
+  grid-column-gap: 5em;
+  grid-row-gap: 1em;
 }
 .container {
   display: grid;
   justify-content: center;
-  grid-template-columns: repeat(3, 18em);
-  grid-auto-flow: row;
+  grid-template-columns: repeat(auto-fit, minmax(auto, 23em));
   grid-column-gap: 1em;
 }
-.code {
-  grid-area: 1/3/5/4;
-  place-self: center;
-}
-.item-code {
-  grid-area: 1/3/3/4;
-  align-self: center;
-}
-hr {
-  background-color: purple;
-  width: 60em;
-}
-input, div >>> select {
-  text-align-last: center;
+@media (min-width: 992px) {
+  .code, .item-code {
+    grid-column: 1/3;
+    place-self: center;
+  }
 }
 </style>
