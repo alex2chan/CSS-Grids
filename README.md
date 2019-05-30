@@ -4,7 +4,7 @@ This is based on the 'Complete Guide to Grid': https://css-tricks.com/snippets/c
 
 This app is built for learning purposes only.
 
-Templates are not implemented here.
+grid-template-areas are not implemented here.
 
 ----
 
