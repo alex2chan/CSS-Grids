@@ -139,7 +139,16 @@
       Clear All Items
       </b-button>
     </div>
-    <div class="grid mb-5" :style="gridStyle" id="grid">
+    <table v-if="checkGrid" id="table" class="text-center" align="center">
+      <colgroup>
+        <col :class="{[col.name]: true}" v-for="col in gridTemplateColumnsArray" :style="{width: returnLength(col.width, gridColumnGap)}">
+      </colgroup>
+      <tr v-for="row in gridTemplateRowsArray" :style="{height: returnLength(row.height, gridRowGap)}">
+        <td v-for="col in gridTemplateColumnsArray">
+        </td>
+      </tr>
+    </table>
+    <div class="grid mb-5" :style="[gridStyle, gridTop]" id="grid">
       <b-form-checkbox size="sm" :class="{[item.name]: true}" v-for="item in items" v-model="itemObject" :value="item" button :key="item.id" :style="item">
         {{ item.name.substring(4) }}
       </b-form-checkbox>
@@ -157,28 +166,28 @@ export default {
       justifyContent: 'center',
       gridColumnGap: '1em',
       gridRowGap: '1em',
-      gridAutoFlow: 'auto',
+      gridAutoFlow: 'unset',
       gridTemplateColumns: 'repeat(auto-fit, minmax(100px, 200px))',
       gridTemplateRows: 'repeat(auto-fit, minmax(100px, 200px))',
       gridAutoRows: '100px',
       gridAutoColumns: '100px',
       itemBgColor: '#cb99e2',
       gridAutoFlowOptions: [
-        { value: 'auto', text: 'auto' },
+        { value: 'unset', text: 'unset' },
         { value: 'row', text: 'row' },
         { value: 'column', text: 'column' },
-        { value: 'row-dense', text: 'row-dense' },
-        { value: 'column-dense', text: 'column-dense' }
+        { value: 'row dense', text: 'row dense' },
+        { value: 'column dense', text: 'column dense' }
       ],
       options: [
-        { value: 'auto', text: 'auto' },
+        { value: 'unset', text: 'unset' },
         { value: 'start', text: 'start' },
         { value: 'end', text: 'end' },
         { value: 'center', text: 'center' },
         { value: 'stretch', text: 'stretch' }
       ],
       contentOptions: [
-        { value: 'auto', text: 'auto' },
+        { value: 'unset', text: 'unset' },
         { value: 'start', text: 'start' },
         { value: 'end', text: 'end' },
         { value: 'center', text: 'center' },
@@ -321,6 +330,13 @@ export default {
     beautify(code) {
       var searchTerm = /;/g
       return code.replace(searchTerm, ';\n')
+    },
+    returnLength(length, gridGap) {
+      if (gridGap) {
+        return 'calc(' + length + ' + ' + gridGap + ')'
+      } else {
+        return length
+      }
     }
   },
   computed: {
@@ -346,12 +362,64 @@ export default {
         return this.gridRowGap + ' ' + this.gridColumnGap
       },
       set: function (newValue) {
-        var regex = /\d(em|fr|px|rem)/g
+        var regex = /\d+\w+/g
         var found = newValue.match(regex)
         if (found != null && found.length == 2) {
           this.gridRowGap = found[0]
           this.gridColumnGap = found[1]
         }
+      }
+    },
+    gridTemplateColumnsArray() {
+      var gridColumns = this.gridTemplateColumns.split(' ')
+      var columnArray = []
+      var columnObject = {}
+      for (var i = 0; i < gridColumns.length; i++) {
+        columnObject.name = 'col' + i
+        columnObject.width = gridColumns[i]
+        columnArray.push({
+          name: columnObject.name,
+          width: columnObject.width
+        })
+      }
+      return columnArray
+    },
+    gridTemplateRowsArray() {
+      var gridRows = this.gridTemplateRows.split(' ')
+      var rowArray = []
+      var rowObject = {}
+      for (var i = 0; i < gridRows.length; i++) {
+        rowObject.name = 'row' + i
+        rowObject.height = gridRows[i]
+        rowArray.push({
+          name: rowObject.name,
+          height: rowObject.height
+        })
+      }
+      return rowArray
+    },
+    gridTop() {
+      var whiteSpace = /\s/g
+      var columnString = this.gridTemplateRows.replace(whiteSpace, ' + ')
+      var calcString = 'calc(-1*(' + columnString + ') - ' + this.gridTemplateRowsArray.length.toString() + '*' + this.gridRowGap + ' + ' + this.gridRowGap + '/2)'
+      if (this.checkGrid) {
+        return {
+          top: calcString
+        }
+      } else {
+        return {
+          top: 'unset'
+        }
+      }
+    },
+    checkGrid() {
+      var regexp = /\d+\w+/g
+      var columnArray = [...this.gridTemplateColumns.matchAll(regexp)]
+      var rowArray = [...this.gridTemplateRows.matchAll(regexp)]
+      if (columnArray.length == this.gridTemplateColumnsArray.length && rowArray.length == this.gridTemplateRowsArray.length) {
+        return true
+      } else {
+        return false
       }
     }
   }
@@ -376,8 +444,15 @@ div >>> label.btn.btn-secondary.active {
   background-color: var(--inverse-color);
   border: none;
 }
+.table {
+  position: static;
+}
+tr, td {
+  border: 1px dashed #c342d2;
+}
 .grid {
   display: grid;
+  position: relative;
   grid-template-columns: var(--grid-template-columns);
   grid-template-rows: var(--grid-template-rows);
   grid-auto-columns: var(--grid-auto-columns);
