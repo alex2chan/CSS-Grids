@@ -1,29 +1,19 @@
-# css-grids
+# CSS-Grids
 
-## Project setup
+This is based on the 'Complete Guide to Grid': https://css-tricks.com/snippets/css/complete-guide-grid/
+
+This app is built for learning purposes only.
+
+grid-template-areas are not implemented here.
+
+----
+
+To run locally, first get npm:
 ```
 npm install
 ```
 
-### Compiles and hot-reloads for development
+Then run it in development:
 ```
 npm run serve
 ```
-
-### Compiles and minifies for production
-```
-npm run build
-```
-
-### Run your tests
-```
-npm run test
-```
-
-### Lints and fixes files
-```
-npm run lint
-```
-
-### Customize configuration
-See [Configuration Reference](https://cli.vuejs.org/config/).
