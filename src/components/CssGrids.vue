@@ -139,16 +139,7 @@
       Clear All Items
       </b-button>
     </div>
-    <table v-if="checkGrid" id="table" class="text-center" align="center">
-      <colgroup>
-        <col :class="{[col.name]: true}" v-for="col in gridTemplateColumnsArray" :style="{width: returnLength(col.width, gridColumnGap)}" :key="col.id">
-      </colgroup>
-      <tr v-for="row in gridTemplateRowsArray" :style="{height: returnLength(row.height, gridRowGap)}" :key="row.id">
-        <td v-for="col in gridTemplateColumnsArray" :key="col.id">
-        </td>
-      </tr>
-    </table>
-    <div class="grid mb-5" :style="[gridStyle, gridTop]" id="grid">
+    <div class="grid mb-5" :style="[gridStyle]" id="grid">
       <b-form-checkbox size="sm" :class="{[item.name]: true}" v-for="item in items" v-model="itemObject" :value="item" button :key="item.id" :style="item">
         {{ item.name.substring(4) }}
       </b-form-checkbox>
@@ -331,13 +322,6 @@ export default {
     beautify(code) {
       var searchTerm = /;/g
       return code.replace(searchTerm, ';\n')
-    },
-    returnLength(length, gridGap) {
-      if (gridGap) {
-        return 'calc(' + length + ' + ' + gridGap + ')'
-      } else {
-        return length
-      }
     }
   },
   computed: {
@@ -370,58 +354,6 @@ export default {
           this.gridColumnGap = found[1]
         }
       }
-    },
-    gridTemplateColumnsArray() {
-      var gridColumns = this.gridTemplateColumns.split(' ')
-      var columnArray = []
-      var columnObject = {}
-      for (var i = 0; i < gridColumns.length; i++) {
-        columnObject.name = 'col' + i
-        columnObject.width = gridColumns[i]
-        columnArray.push({
-          name: columnObject.name,
-          width: columnObject.width
-        })
-      }
-      return columnArray
-    },
-    gridTemplateRowsArray() {
-      var gridRows = this.gridTemplateRows.split(' ')
-      var rowArray = []
-      var rowObject = {}
-      for (var i = 0; i < gridRows.length; i++) {
-        rowObject.name = 'row' + i
-        rowObject.height = gridRows[i]
-        rowArray.push({
-          name: rowObject.name,
-          height: rowObject.height
-        })
-      }
-      return rowArray
-    },
-    gridTop() {
-      var whiteSpace = /\s/g
-      var columnString = this.gridTemplateRows.replace(whiteSpace, ' + ')
-      var calcString = 'calc(-1*(' + columnString + ') - ' + this.gridTemplateRowsArray.length.toString() + '*' + this.gridRowGap + ' + ' + this.gridRowGap + '/2)'
-      if (this.checkGrid) {
-        return {
-          top: calcString
-        }
-      } else {
-        return {
-          top: 'unset'
-        }
-      }
-    },
-    checkGrid() {
-      var regexp = /\d+\w+/g
-      var columnArray = [...this.gridTemplateColumns.matchAll(regexp)]
-      var rowArray = [...this.gridTemplateRows.matchAll(regexp)]
-      if (columnArray.length == this.gridTemplateColumnsArray.length && rowArray.length == this.gridTemplateRowsArray.length) {
-        return true
-      } else {
-        return false
-      }
     }
   }
 }
@@ -445,15 +377,8 @@ div >>> label.btn.btn-secondary.active {
   background-color: var(--inverse-color);
   border: none;
 }
-.table {
-  position: static;
-}
-tr, td {
-  border: 1px dashed #c342d2;
-}
 .grid {
   display: grid;
-  position: relative;
   grid-template-columns: var(--grid-template-columns);
   grid-template-rows: var(--grid-template-rows);
   grid-auto-columns: var(--grid-auto-columns);
