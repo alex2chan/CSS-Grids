@@ -141,10 +141,10 @@
     </div>
     <table v-if="checkGrid" id="table" class="text-center" align="center">
       <colgroup>
-        <col :class="{[col.name]: true}" v-for="col in gridTemplateColumnsArray" :style="{width: returnLength(col.width, gridColumnGap)}">
+        <col :class="{[col.name]: true}" v-for="col in gridTemplateColumnsArray" :style="{width: returnLength(col.width, gridColumnGap)}" :key="col.id">
       </colgroup>
-      <tr v-for="row in gridTemplateRowsArray" :style="{height: returnLength(row.height, gridRowGap)}">
-        <td v-for="col in gridTemplateColumnsArray">
+      <tr v-for="row in gridTemplateRowsArray" :style="{height: returnLength(row.height, gridRowGap)}" :key="row.id">
+        <td v-for="col in gridTemplateColumnsArray" :key="col.id">
         </td>
       </tr>
     </table>
