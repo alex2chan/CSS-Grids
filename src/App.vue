@@ -6,12 +6,11 @@
 </template>
 
 <script>
-import CssGrids from './components/CssGrids.vue'
 
 export default {
   name: 'app',
   components: {
-    CssGrids
+    CssGrids: () => import("./components/CssGrids")
   }
 }
 </script>

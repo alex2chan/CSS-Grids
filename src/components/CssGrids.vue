@@ -158,6 +158,7 @@
 
 <script>
 export default {
+  name: 'CssGrids',
   data() {
     return {
       alignItems: 'stretch',
