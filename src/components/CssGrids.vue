@@ -173,7 +173,7 @@ export default {
       gridAutoFlow: 'initial',
       gridTemplateColumns: 'repeat(auto-fit, 50px)',
       gridTemplateRows: 'repeat(auto-fit, 50px)',
-      gridTemplateAreas: '',
+      gridTemplateAreas: '"header header header" "sidebar sidebar ." ". . footer"',
       gridAutoRows: '50px',
       gridAutoColumns: '50px',
       itemBgColor: '#cb99e2',
