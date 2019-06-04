@@ -1,77 +1,63 @@
 <template lang="html">
   <div>
     <div class="header-container text-center mb-3">
-      <b-form-group
-      label-for="itemBgColor"
-      label="Item Background Color:">
+      <b-form-group>
+        <label for="itemBgColor">Item Background Color: <i class="far fa-question-circle" v-b-tooltip.hover title="Changes the background color of the items"></i></label>
         <b-form-input id="itemBgColor" type="color" v-model="itemBgColor"></b-form-input>
       </b-form-group>
-      <b-form-group
-      label-for="alignItems"
-      label="Align Items:">
+      <b-form-group>
+        <label for="alignItems">Align Items: <i class="far fa-question-circle" v-b-tooltip.hover title="Changes the vertical alignment of the items"></i></label>
         <b-form-select id="alignItems" v-model="alignItems" :options="options"></b-form-select>
       </b-form-group>
-      <b-form-group
-      label-for="justifyItems"
-      label="Justify Items:">
+      <b-form-group>
+        <label for="justifyItems">Justify Items: <i class="far fa-question-circle" v-b-tooltip.hover title="Changes the horizontal alignment of the items"></i></label>
         <b-form-select id="justifyItems" v-model="justifyItems" :options="options"></b-form-select>
       </b-form-group>
-      <b-form-group
-      label-for="alignContent"
-      label="Align Content:">
+      <b-form-group>
+        <label for="alignContent">Align Content: <i class="far fa-question-circle" v-b-tooltip.hover title="Changes the vertical alignment of the grid"></i></label>
         <b-form-select id="alignContent" v-model="alignContent" :options="contentOptions"></b-form-select>
       </b-form-group>
-      <b-form-group
-      label-for="justifyContent"
-      label="Justify Content:">
+      <b-form-group>
+        <label for="justifyContent">Justify Content: <i class="far fa-question-circle" v-b-tooltip.hover title="Changes the horizontal alignment of the grid"></i></label>
         <b-form-select id="justifyContent" v-model="justifyContent" :options="contentOptions"></b-form-select>
       </b-form-group>
     </div>
     <div class="container mb-5 text-center">
-      <b-form-group
-      label-for="gridTemplateColumns"
-      label="Grid Template Columns:">
+      <b-form-group>
+        <label for="gridTemplateColumns">Grid Template Columns: <i class="far fa-question-circle" v-b-tooltip.hover title="Defines the explicit columns of the grid"></i></label>
         <b-form-input id="gridTemplateColumns" type="text" v-model="gridTemplateColumns"></b-form-input>
       </b-form-group>
-      <b-form-group
-      label-for="gridTemplateRows"
-      label="Grid Template Rows:">
+      <b-form-group>
+        <label for="gridTemplateRows">Grid Template Rows: <i class="far fa-question-circle" v-b-tooltip.hover title="Defines the explicit rows of the grid"></i></label>
         <b-form-input id="gridTemplateRows" type="text" v-model="gridTemplateRows"></b-form-input>
       </b-form-group>
-      <b-form-group
-      label-for="gridAutoColumns"
-      label="Grid Auto Columns:">
+      <b-form-group>
+        <label for="gridAutoColumns">Grid Auto Columns: <i class="far fa-question-circle" v-b-tooltip.hover title="Defines the implicit columns of the grid"></i></label>
         <b-form-input id="gridAutoColumns" type="text" v-model="gridAutoColumns"></b-form-input>
       </b-form-group>
-      <b-form-group
-      label-for="gridAutoRows"
-      label="Grid Auto Rows:">
+      <b-form-group>
+        <label for="gridAutoRows">Grid Auto Rows: <i class="far fa-question-circle" v-b-tooltip.hover title="Defines the implicit rows of the grid"></i></label>
         <b-form-input id="gridAutoRows" type="text" v-model="gridAutoRows"></b-form-input>
       </b-form-group>
-      <b-form-group
-      label-for="gridAutoFlow"
-      label="Grid Auto Flow:">
+      <b-form-group>
+        <label for="gridAutoFlow">Grid Auto Flow: <i class="far fa-question-circle" v-b-tooltip.hover title="Defines the auto-placement algorithm of items"></i></label>
         <b-form-select id="gridAutoFlow" v-model="gridAutoFlow" :options="gridAutoFlowOptions"></b-form-select>
       </b-form-group>
-      <b-form-group
-      label-for="gridGap"
-      label="Grid Gap:">
+      <b-form-group>
+        <label for="gridGap">Grid Gap: <i class="far fa-question-circle" v-b-tooltip.hover title="Defines grid gaps where Left is Row and Right is Column"></i></label>
         <b-form-input id="gridGap" type="text" v-model="gridGap"></b-form-input>
       </b-form-group>
-      <b-form-group
-      label-for="gridColumnGap"
-      label="Grid Column Gap:">
+      <b-form-group>
+        <label for="gridColumnGap">Grid Column Gap: <i class="far fa-question-circle" v-b-tooltip.hover title="Defines the grid column gap"></i></label>
         <b-form-input id="gridColumnGap" type="text" v-model="gridColumnGap"></b-form-input>
       </b-form-group>
-      <b-form-group
-      label-for="gridRowGap"
-      label="Grid Row Gap:">
+      <b-form-group>
+        <label for="gridRowGap">Grid Row Gap: <i class="far fa-question-circle" v-b-tooltip.hover title="Defines the grid row gap"></i></label>
         <b-form-input id="gridRowGap" type="text" v-model="gridRowGap"></b-form-input>
       </b-form-group>
       <b-form-group
-      class="gridArea"
-      label-for="gridTemplateAreas"
-      label="Grid Template Areas:">
+      class="gridArea">
+        <label for="gridTemplateAreas">Grid Template Areas: <i class="far fa-question-circle" v-b-tooltip.hover title="Defines named areas in the grid (Be sure that the areas are defined in rectangles only, it can be vertically or horizontally)"></i></label>
         <b-form-input id="gridTemplateAreas" type="text" v-model="gridTemplateAreas"></b-form-input>
       </b-form-group>
       <code class="code text-left">
@@ -88,30 +74,25 @@
       <hr>
       <h4 class="text-warning text-center">{{itemObject.name}}</h4>
       <div class="container text-center">
-        <b-form-group
-        label-for="gridColumn"
-        label="Grid Column:">
+        <b-form-group>
+          <label for="gridColumn">Grid Column: <i class="far fa-question-circle" v-b-tooltip.hover title="Defines the column position/span of the item"></i></label>
           <b-form-input id="gridColumn" type="text" v-model="itemObject.gridColumn"></b-form-input>
         </b-form-group>
-        <b-form-group
-        label-for="gridRow"
-        label="Grid Row:">
+        <b-form-group>
+          <label for="gridRow">Grid Row: <i class="far fa-question-circle" v-b-tooltip.hover title="Defines the row position/span of the item"></i></label>
           <b-form-input id="gridRow" type="text" v-model="itemObject.gridRow"></b-form-input>
         </b-form-group>
-        <b-form-group
-        label-for="alignSelf"
-        label="Align Self:">
+        <b-form-group>
+          <label for="alignSelf">Align Self: <i class="far fa-question-circle" v-b-tooltip.hover title="Changes the vertical position of the items (Overwrites the align-items grid property)"></i></label>
           <b-form-select id="alignSelf" type="text" v-model="itemObject.alignSelf" :options="options"></b-form-select>
         </b-form-group>
-        <b-form-group
-        label-for="justifySelf"
-        label="Justify Self:">
+        <b-form-group>
+          <label for="justifySelf">Justify Self: <i class="far fa-question-circle" v-b-tooltip.hover title="Changes the horizontal position of the items (Overwrites the justify-items grid property)"></i></label>
           <b-form-select id="justifySelf" type="text" v-model="itemObject.justifySelf" :options="options"></b-form-select>
         </b-form-group>
         <b-form-group
-        class="gridArea"
-        label-for="gridArea"
-        label="Grid Area:">
+        class="gridArea">
+          <label for="gridArea">Grid Area: <i class="far fa-question-circle" v-b-tooltip.hover title="Defines the named area to place the item in"></i></label>
           <b-form-input id="gridArea" type="text" v-model="itemObject.gridArea"></b-form-input>
         </b-form-group>
         <code class="code text-left">
@@ -409,7 +390,7 @@ div >>> label.btn.btn-secondary.active {
 .header-container {
   display: grid;
   place-content: center;
-  grid-template-columns: repeat(auto-fit, 11em);
+  grid-template-columns: repeat(auto-fit, 12em);
   grid-column-gap: 1em;
 }
 .button-container {
