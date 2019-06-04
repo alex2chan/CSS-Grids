@@ -173,7 +173,7 @@ export default {
       gridAutoFlow: 'initial',
       gridTemplateColumns: 'repeat(auto-fit, 50px)',
       gridTemplateRows: 'repeat(auto-fit, 50px)',
-      gridTemplateAreas: '"header header header" "sidebar sidebar ." ". . footer"',
+      gridTemplateAreas: '"header header header" "sidebar sidebar ." ". footer footer"',
       gridAutoRows: '50px',
       gridAutoColumns: '50px',
       itemBgColor: '#cb99e2',
@@ -222,7 +222,7 @@ export default {
         gridRow: 'initial',
         alignSelf: null,
         justifySelf: null,
-        gridArea: null
+        gridArea: 'initial'
       }
       if (this.itemsRemoved.length > 0) {
         item.name = this.itemsRemoved[this.itemsRemoved.length-1]
@@ -287,33 +287,33 @@ export default {
       if (this.itemObject) {
         this.itemObject.name = null
       }
+      var itemSubObject = {
+        alignSelf: null,
+        justifySelf: null
+      }
       this.items.push({
         name: 'item0',
         gridColumn: '1/span 2',
         gridRow: '1/2',
-        alignSelf: null,
-        justifySelf: null
+        ...itemSubObject
       })
       this.items.push({
         name: 'item1',
         gridColumn: '3/4',
         gridRow: '1/span 2',
-        alignSelf: null,
-        justifySelf: null
+        ...itemSubObject
       })
       this.items.push({
         name: 'item2',
         gridColumn: '2/span 2',
         gridRow: '3/4',
-        alignSelf: null,
-        justifySelf: null
+        ...itemSubObject
       })
       this.items.push({
         name: 'item3',
         gridColumn: '1/2',
         gridRow: '2/span 2',
-        alignSelf: null,
-        justifySelf: null
+        ...itemSubObject
       })
     },
     getGridCode() {
