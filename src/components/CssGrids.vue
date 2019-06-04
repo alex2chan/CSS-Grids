@@ -68,6 +68,12 @@
       label="Grid Row Gap:">
         <b-form-input id="gridRowGap" type="text" v-model="gridRowGap"></b-form-input>
       </b-form-group>
+      <b-form-group
+      class="gridArea"
+      label-for="gridTemplateAreas"
+      label="Grid Template Areas:">
+        <b-form-input id="gridTemplateAreas" type="text" v-model="gridTemplateAreas"></b-form-input>
+      </b-form-group>
       <code class="code text-left">
         <pre class="text-light">
           {{ getGridCode() }}
@@ -102,7 +108,13 @@
         label="Justify Self:">
           <b-form-select id="justifySelf" type="text" v-model="itemObject.justifySelf" :options="options"></b-form-select>
         </b-form-group>
-        <code class="item-code text-left">
+        <b-form-group
+        class="gridArea"
+        label-for="gridArea"
+        label="Grid Area:">
+          <b-form-input id="gridArea" type="text" v-model="itemObject.gridArea"></b-form-input>
+        </b-form-group>
+        <code class="code text-left">
           <pre class="text-light">
             {{ getItemCode(itemObject.name) }}
             .{{itemObject.name}} {
@@ -158,28 +170,29 @@ export default {
       justifyContent: 'center',
       gridColumnGap: '1em',
       gridRowGap: '1em',
-      gridAutoFlow: 'unset',
-      gridTemplateColumns: 'repeat(auto-fit, minmax(100px, 200px))',
-      gridTemplateRows: 'repeat(auto-fit, minmax(100px, 200px))',
-      gridAutoRows: '100px',
-      gridAutoColumns: '100px',
+      gridAutoFlow: 'initial',
+      gridTemplateColumns: 'repeat(auto-fit, 50px)',
+      gridTemplateRows: 'repeat(auto-fit, 50px)',
+      gridTemplateAreas: '',
+      gridAutoRows: '50px',
+      gridAutoColumns: '50px',
       itemBgColor: '#cb99e2',
       gridAutoFlowOptions: [
-        { value: 'unset', text: 'unset' },
+        { value: 'initial', text: 'initial' },
         { value: 'row', text: 'row' },
         { value: 'column', text: 'column' },
         { value: 'row dense', text: 'row dense' },
         { value: 'column dense', text: 'column dense' }
       ],
       options: [
-        { value: 'unset', text: 'unset' },
+        { value: 'initial', text: 'initial' },
         { value: 'start', text: 'start' },
         { value: 'end', text: 'end' },
         { value: 'center', text: 'center' },
         { value: 'stretch', text: 'stretch' }
       ],
       contentOptions: [
-        { value: 'unset', text: 'unset' },
+        { value: 'initial', text: 'initial' },
         { value: 'start', text: 'start' },
         { value: 'end', text: 'end' },
         { value: 'center', text: 'center' },
@@ -195,7 +208,8 @@ export default {
         gridColumn: null,
         gridRow: null,
         alignSelf: null,
-        justifySelf: null
+        justifySelf: null,
+        gridArea: null
       },
       gridStyleCode: '',
       itemStyleCode: ''
@@ -204,10 +218,11 @@ export default {
   methods: {
     addItem() {
       var item = {
-        gridColumn: null,
-        gridRow: null,
+        gridColumn: 'initial',
+        gridRow: 'initial',
         alignSelf: null,
-        justifySelf: null
+        justifySelf: null,
+        gridArea: null
       }
       if (this.itemsRemoved.length > 0) {
         item.name = this.itemsRemoved[this.itemsRemoved.length-1]
@@ -308,7 +323,7 @@ export default {
         var code = el.style.cssText.replace(colorTerm, '')
         var dashedTerm = /--/g
         code = code.replace(dashedTerm, '')
-        var addSpaceTerm = /(ns:|ws:)/g
+        var addSpaceTerm = /(ns:|ws:|as:)/g
         code = code.replace(addSpaceTerm, '$1 ')
         this.gridStyleCode = code
       }, 1)
@@ -339,7 +354,8 @@ export default {
         '--grid-template-columns': this.gridTemplateColumns,
         '--grid-template-rows': this.gridTemplateRows,
         '--grid-auto-columns': this.gridAutoColumns,
-        '--grid-auto-rows': this.gridAutoRows
+        '--grid-auto-rows': this.gridAutoRows,
+        '--grid-template-areas': this.gridTemplateAreas
       }
     },
     gridGap: {
@@ -383,6 +399,7 @@ div >>> label.btn.btn-secondary.active {
   grid-template-rows: var(--grid-template-rows);
   grid-auto-columns: var(--grid-auto-columns);
   grid-auto-rows: var(--grid-auto-rows);
+  grid-template-areas: var(--grid-template-areas);
 }
 .grid > div {
   border: 1px solid #c342d2;
@@ -410,9 +427,12 @@ div >>> label.btn.btn-secondary.active {
   grid-column-gap: 1em;
 }
 @media (min-width: 992px) {
-  .code, .item-code {
+  .code {
     grid-column: 1/3;
     place-self: center;
+  }
+  .gridArea {
+    grid-column: 1/3;
   }
 }
 </style>
