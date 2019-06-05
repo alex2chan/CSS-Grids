@@ -47,7 +47,7 @@ More information can be found here:
 https://developer.mozilla.org/en-US/docs/Web/CSS/repeat  
 https://developer.mozilla.org/en-US/docs/Web/CSS/minmax
 
-### Using the keywords min-content, max-content, auto, auto-fill, auto-fit
+#### Using the keywords min-content, max-content, auto, auto-fill, auto-fit
 This is where CSS grids can become really flexible. Instead of just putting a fixed size like "100px", one could instead use the keyword "auto" to automatically size an element based on its content. The same goes with min-content and max-content.
 
 The keywords auto-fill and auto-fit can be used as the first argument of the repeat function. When "auto-fill" is used with the repeat function on the grid-template-columns property, the width of the grid will span the entire width of its parent. If the width of the parent changes depending on screen size or some other factors, the grid will also react to that. 
