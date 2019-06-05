@@ -43,8 +43,8 @@ The second argument takes in the value that you want to repeat.
 
 The minmax function takes in the minimum and maximum size and restricts an element's size to be between them. This provides a bit of flexibility to CSS grids.
 
-More information can be found here:
-https://developer.mozilla.org/en-US/docs/Web/CSS/repeat
+More information can be found here:  
+https://developer.mozilla.org/en-US/docs/Web/CSS/repeat  
 https://developer.mozilla.org/en-US/docs/Web/CSS/minmax
 
 ### Using the keywords min-content, max-content, auto, auto-fill, auto-fit
