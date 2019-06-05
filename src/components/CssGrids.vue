@@ -70,6 +70,30 @@
         </pre>
       </code>
     </div>
+    <div class="button-container mb-5">
+      <b-button
+      variant="success"
+      @click="addItem()">
+      Add Item
+      </b-button>
+      <b-button
+      variant="warning"
+      @click="preSet()">
+      Preset
+      </b-button>
+      <b-button
+      variant="danger"
+      @click="clearItems()">
+      Clear All Items
+      </b-button>
+    </div>
+    <div class="resizable">
+      <div class="grid mb-5" :style="[gridStyle]" id="grid">
+        <b-form-checkbox size="sm" :class="{[item.name]: true}" v-for="item in items" v-model="itemObject" :value="item" button :key="item.id" :style="item">
+          {{ item.name.substring(4) }}
+        </b-form-checkbox>
+      </div>
+    </div>
     <div v-if="itemObject.name">
       <hr>
       <h4 class="text-warning text-center">{{itemObject.name}}</h4>
@@ -114,28 +138,6 @@
         </b-button>
       </div>
       <hr>
-    </div>
-    <div class="button-container mb-5">
-      <b-button
-      variant="success"
-      @click="addItem()">
-      Add Item
-      </b-button>
-      <b-button
-      variant="warning"
-      @click="preSet()">
-      Preset
-      </b-button>
-      <b-button
-      variant="danger"
-      @click="clearItems()">
-      Clear All Items
-      </b-button>
-    </div>
-    <div class="grid mb-5" :style="[gridStyle]" id="grid">
-      <b-form-checkbox size="sm" :class="{[item.name]: true}" v-for="item in items" v-model="itemObject" :value="item" button :key="item.id" :style="item">
-        {{ item.name.substring(4) }}
-      </b-form-checkbox>
     </div>
   </div>
 </template>
@@ -381,6 +383,14 @@ div >>> label.btn.btn-secondary.active {
   grid-auto-columns: var(--grid-auto-columns);
   grid-auto-rows: var(--grid-auto-rows);
   grid-template-areas: var(--grid-template-areas);
+}
+.resizable {
+  width: auto;
+  height: auto;
+  border: 1px solid white;
+  resize: both;
+  margin: auto;
+  overflow: scroll;
 }
 .grid > div {
   border: 1px solid #c342d2;
