@@ -388,7 +388,7 @@ div >>> label.btn.btn-secondary.active {
   width: auto;
   height: auto;
   border: 1px solid white;
-  resize: both;
+  resize: horizontal;
   margin: auto;
   overflow: scroll;
 }
